@@ -22,9 +22,11 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  var ip;
+  var message;
   void sendDeviceIdWebSocket(String ipAddress, context) {
     var channel = IOWebSocketChannel.connect(Uri.parse("ws://$ipAddress:81"));
-    channel.sink.add('vexa4s0k8d');
+    channel.sink.add(message);
     channel.stream.listen((message) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)));
@@ -35,15 +37,33 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // The title text which will be shown on the action bar
         title: Text('web'),
       ),
       body: Center(
-        child: TextButton(
-          onPressed: () {
-            sendDeviceIdWebSocket('19.132.168.32', context);
-          },
-          child: Text('submit'),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextField(
+                onChanged: (v) {
+                  ip = v;
+                },
+                decoration: InputDecoration(helperText: 'ip'),
+              ),
+              TextField(
+                onChanged: (v) {
+                  message = v;
+                },
+                decoration: InputDecoration(helperText: 'device id'),
+              ),
+              TextButton(
+                onPressed: () {
+                  sendDeviceIdWebSocket(ip, context);
+                },
+                child: Text('submit'),
+              ),
+            ],
+          ),
         ),
       ),
     );
